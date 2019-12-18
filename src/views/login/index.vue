@@ -29,8 +29,32 @@
 <script>
 export default {
   data () {
-    let validator = function (rule, value, callBack) { value ? callBack() : callBack(new Error('您必须同意无条件被我们蒙骗')) }
-    return { myForm: { phoneNumber: '', msgNumber: '', will: false }, myRule: { phoneNumber: [ { required: true, message: '请输入活动名称' }, { pattern: /^1[3456789]\d{9}$/, message: '请输入合法的手机号' } ], msgNumber: [ { required: true, message: '请输入您的验证码' }, { pattern: /^\d{6}$/, message: '验证码为6位数字' } ], will: [{ validator }] }
+    // rule当前规则
+    // value当前表单项的值
+    // callback 回调函数
+    // 正常写法
+    //   if (value) {
+    //     // 正确 勾选了协议
+    //     callBack() // 一切OK请继续
+    //   } else {
+    //     // 不对 没勾选协议
+    //     callBack(new Error('您必须同意无条件被我们蒙骗'))
+    let validator = function (rule, value, callBack) {
+      value ? callBack() : callBack(new Error('您必须同意无条件被我们蒙骗'))
+    }
+    return {
+      //   决定着校验规则  key(字段名):value(对象数组) => 一个对象就是一个校验规则
+      // required 为true 就表示该字段必填 如果不填 就会提示消息
+      myForm: { phoneNumber: '', msgNumber: '', will: false },
+      myRule: { phoneNumber: [
+        { required: true, message: '请输入活动名称' },
+        { pattern: /^1[3456789]\d{9}$/, message: '请输入合法的手机号' }
+      ],
+      msgNumber: [
+        { required: true, message: '请输入您的验证码' },
+        { pattern: /^\d{6}$/, message: '验证码为6位数字' }
+      ],
+      will: [{ validator }] }
     }
   },
   methods: {
