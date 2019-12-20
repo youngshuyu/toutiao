@@ -3,7 +3,7 @@
           <div class="title">
             <img src="../../assets/img/logo_admin.png" alt />
           </div>
-          <el-menu background-color=" #353b4e" text-color="#adafb5" active-text-color="#ffd04b" style="height:100vh">
+          <el-menu background-color="#353b4e" text-color="#adafb5" active-text-color="#ffd04b" style="border-right:1px solid #323745">
             <el-menu-item>首页</el-menu-item>
             <el-submenu>
               <span slot="title">文章管理</span>
