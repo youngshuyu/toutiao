@@ -11,4 +11,12 @@ axios.interceptors.request.use(function (config) {
 // 对请求失败做处理
   return Promise.reject(error)
 })
+
+// 响应拦截
+axios.interceptors.response.use(function (response) {
+  // 成功时执行
+  return response.data ? response.data : {}// 预处理返回数据,解决data不存在时,then()执行时报错的问题
+}, function () {
+  // 失败时执行
+})
 export default axios
