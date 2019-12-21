@@ -3,12 +3,11 @@ import App from './App.vue'
 import router from './router'
 import '../src/permission' // 引入导航守卫
 import ElementUI from 'element-ui'
-import axios from 'axios'
 import 'element-ui/lib/theme-chalk/index.css'
 import './styles/index.less'
 import Component from './components/index'
+import axios from '../src/utils/request'// 引入自己封装过后的axios
 
-axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false
 Vue.use(ElementUI)
