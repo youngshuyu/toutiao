@@ -8,12 +8,12 @@
       <div class="right">
           <el-row type="flex" justify="end" align="middle">
               <img :src="userInfo.photo ? userInfo.photo : defaultImg" alt="">
-          <el-dropdown>
+          <el-dropdown @command="handleCommend">
               <span class="el-dropdown-link">{{userInfo.name}}</span>
               <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item>个人信息</el-dropdown-item>
-                  <el-dropdown-item>Git地址</el-dropdown-item>
-                  <el-dropdown-item>退出登录</el-dropdown-item>
+                  <el-dropdown-item command="git">Git地址</el-dropdown-item>
+                  <el-dropdown-item command="lgOut">退出登录</el-dropdown-item>
               </el-dropdown-menu>
           </el-dropdown>
           </el-row>
@@ -42,6 +42,16 @@ export default {
     }).then(result => {
       this.userInfo = result.data.data // 获取用户个人信息
     })
+  },
+  methods: {
+    handleCommend (command) {
+      if (command === 'git') {
+        window.location.href = 'https://github.com/shuiruohanyu/89heimatoutiao'
+      } else if (command === 'lgOut') {
+        window.localStorage.removeItem('user-token')
+        this.$router.push('/')
+      }
+    }
   }
 }
 
