@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/home'
 import Login from '../views/login'
 import Home2 from '../views/home/home/home.vue'
+import Comment from '../views/home/comment/comment.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -17,6 +18,9 @@ const routes = [
     children: [{
       path: '',
       component: Home2
+    }, {
+      path: 'comment',
+      component: Comment
     }]
   },
   {

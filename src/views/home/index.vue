@@ -9,7 +9,6 @@
           <layout-header></layout-header>
         </el-header>
         <el-main>
-          主要内容
           <router-view></router-view>
         </el-main>
       </el-container>
