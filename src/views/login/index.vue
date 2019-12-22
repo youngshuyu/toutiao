@@ -65,12 +65,10 @@ export default {
           this.$axios.post('/authorizations', this.myForm)
             .then(res => {
               window.localStorage.setItem('user-token', res.data.token)// 对token令牌进行前端存储,以便后续接口访问使用
-              if (res.status === 201) {
-                this.$router.push('/home')
-              }
+              this.$router.push('/home')
             })
-            .catch(error => console.log(error)
-            )
+            // .catch(error => console.log(error)
+            // )
         }
       })
     }
