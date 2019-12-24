@@ -3,7 +3,7 @@
     <bread-crumb slot="header">
       <template slot="title">评论列表</template>
     </bread-crumb>
-    <el-table :data="list">
+    <el-table :data="list" v-loading="loading">
       <el-table-column label="标题" width="600" prop="title"></el-table-column>
       <el-table-column label="评论状态" prop="comment_status" :formatter="formatterBool"></el-table-column>
       <el-table-column label="总评论数" prop="total_comment_count"></el-table-column>
@@ -40,17 +40,20 @@ export default {
         total: 100,
         currentPage: 1,
         pageSize: 10
-      }
+      },
+      loading: false
     }
   },
   methods: {
     getData () {
+      this.loading = true
       this.$axios({
         url: 'articles',
         params: { response_type: 'comment', page: this.page.currentPage, per_page: this.page.pageSize }
       }).then(res => {
         this.list = res.data.results
         this.page.total = res.data.total_count
+        this.loading = false
       })
     },
     changePage (newPage) {
