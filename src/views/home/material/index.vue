@@ -3,6 +3,11 @@
     <bread-crumb slot="header">
       <template slot="title">素材管理</template>
     </bread-crumb>
+    <el-row type="flex" justify="end">
+            <el-upload :http-request="uploadImg" :show-file-list="false" action="">
+                <el-button size="small" type="primary">点击上传</el-button>
+            </el-upload>
+    </el-row>
     <!-- 素材内容 -->
     <el-tabs v-model="activeName" @tab-click="changeTab" v-loading="loading">
       <el-tab-pane label="全部素材" name="all">
@@ -16,8 +21,8 @@
               style="font-size:20px"
               align="middle"
             >
-              <i class="el-icon-star-on"></i>
-              <i class="el-icon-delete-solid"></i>
+              <i class="el-icon-star-on" @click="collectOrCancel(item)" :style="{color : item.is_collected ? 'skyblue' : 'black'}"></i>
+              <i class="el-icon-delete-solid" @click="delMaterial(item.id)"></i>
             </el-row>
           </el-card>
         </div>
@@ -89,6 +94,42 @@ export default {
     changePage (newPage) {
       this.page.currentPage = newPage
       this.getData()
+    },
+    uploadImg (params) {
+      this.loading = true
+      let form = new FormData()
+      form.append('image', params.file)// 添加文件到formData
+      this.$axios({
+        url: '/user/images',
+        method: 'post',
+        data: form
+      }).then(() => {
+        this.loading = false
+        this.getData()
+      })
+    },
+    collectOrCancel (row) {
+      this.$axios({
+        method: 'put',
+        url: `/user/images/${row.id}`,
+        data: {
+          collect: !row.is_collected
+        }
+      })
+        .then(() => {
+          this.getData()
+        })
+    },
+    delMaterial (id) {
+      this.$confirm('确定要删除么').then(() => {
+        this.$axios({
+          url: `/user/images/${id}`,
+          method: 'delete'
+        })
+          .then(() => {
+            this.getData()
+          })
+      })
     }
   },
   created () {
@@ -117,6 +158,9 @@ export default {
       background-color: #f4f5f6;
       width: 100%;
       left: 0;
+      i {
+          cursor: pointer;
+      }
     }
   }
 }
