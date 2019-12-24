@@ -21,6 +21,9 @@ const routes = [
     }, {
       path: 'comment',
       component: () => import('../views/home/comment/comment.vue')// 按需加载
+    }, {
+      path: 'material',
+      component: () => import('../views/home/material')
     }]
   },
   {
