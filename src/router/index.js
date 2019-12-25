@@ -24,6 +24,9 @@ const routes = [
     }, {
       path: 'material',
       component: () => import('../views/home/material')
+    }, {
+      path: 'articles',
+      component: () => import('../views/home/article/index.vue')
     }]
   },
   {
