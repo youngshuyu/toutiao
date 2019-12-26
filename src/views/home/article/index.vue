@@ -53,9 +53,9 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card class="main">
+    <el-card class="main" v-loading="loading">
       <el-row slot="header">
-        <span style="font-size:14px">共找到1000条</span>
+        <span style="font-size:14px">共找到{{page.total}}条</span>
       </el-row>
       <el-row v-for="item in list" :key="item.id.toString()" class="articles">
         <el-col :span="14">
@@ -79,6 +79,16 @@
           </el-row>
         </el-col>
       </el-row>
+      <el-row type="flex" justify="space-around" style="margin-top:20px">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="page.total"
+          :page-size="page.pageSize"
+          :current-page="page.currentPage"
+          @current-change="changePage"
+        ></el-pagination>
+      </el-row>
     </el-card>
   </div>
 </template>
@@ -94,7 +104,13 @@ export default {
         dateRange: []
       },
       list: [],
-      defaultImg: require('../../../assets/img/老婆.jpeg')
+      defaultImg: require('../../../assets/img/老婆.jpeg'),
+      loading: false,
+      page: {
+        total: 0,
+        pageSize: 10,
+        currentPage: 1
+      }
     }
   },
   filters: {
@@ -139,20 +155,36 @@ export default {
       })
     },
     getArticles (params) {
+      this.loading = true
       this.$axios({
         url: '/articles',
         params
       }).then(res => {
         console.log(res)
         this.list = res.data.results
+        this.page.total = res.data.total_count
+        this.loading = false
       })
     },
     selectStatus () {
+      this.page.currentPage = 1
+      this.getConditionArticle()
+    },
+    changePage (newPage) {
+      this.page.currentPage = newPage
+      this.getConditionArticle()
+    },
+    getConditionArticle () {
       let params = {
+        page: this.page.currentPage,
+        per_page: this.page.pageSize,
         status: this.radio === 5 ? null : this.radio,
         channel_id: this.select.id,
-        begin_pubdate: this.select.dateRange.length ? this.select.dateRange[0] : null,
-        end_pubdate: this.select.dateRange.length > 1 ? this.select.dateRange[1] : null
+        begin_pubdate: this.select.dateRange.length
+          ? this.select.dateRange[0]
+          : null,
+        end_pubdate:
+          this.select.dateRange.length > 1 ? this.select.dateRange[1] : null
       }
       this.getArticles(params)
     }
