@@ -20,11 +20,18 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="频道">
-          <el-select></el-select>
+        <el-select v-model="value">
+          <el-option
+            v-for="item in channels"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
-         <el-button type='primary'>发布</el-button>
-         <el-button>存入草稿</el-button>
+        <el-button type="primary">发布</el-button>
+        <el-button>存入草稿</el-button>
       </el-form-item>
     </el-form>
   </el-card>
@@ -38,8 +45,22 @@ export default {
         inputTitle: '',
         inputContent: '',
         coverRadio: 1
-      }
+      },
+      channels: []
     }
+  },
+  methods: {
+    getChannels () {
+      this.$axios({
+        url: '/channels'
+      }).then(res => {
+        console.log(res)
+        this.channels = res.data.channels
+      })
+    }
+  },
+  created () {
+    this.getChannels()
   }
 }
 </script>
