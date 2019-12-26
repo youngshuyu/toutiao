@@ -96,9 +96,11 @@ export default {
       this.$refs.publishForm.validate(isOk => {
         if (isOk) {
           // 可以去进行 发布接口调用
+          let { articleId } = this.$route.params
+          // 如果url 路径有参数就是修改文章，否则是发布文章
           this.$axios({
-            url: '/articles',
-            method: 'post',
+            url: articleId ? `/articles/${articleId}` : '/articles',
+            method: articleId ? 'put' : 'post',
             params: {
               draft // 是否存为草稿
             },
@@ -109,10 +111,20 @@ export default {
           })
         }
       })
+    },
+    getArticleById (id) {
+      this.$axios({
+        url: `/articles/${id}`
+      }).then(res => {
+        this.formData = res.data
+      })
     }
   },
   created () {
     this.getChannels()
+    let { articleId } = this.$route.params
+    // 创建组件后，如果url 路径有参数就是修改文章，否则是发布文章
+    articleId && this.getArticleById(articleId)
   }
 }
 </script>
