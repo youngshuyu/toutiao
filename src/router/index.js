@@ -27,6 +27,9 @@ const routes = [
     }, {
       path: 'articles',
       component: () => import('../views/home/article/index.vue')
+    }, {
+      path: 'publish',
+      component: () => import('../views/home/publish')
     }]
   },
   {
