@@ -53,16 +53,34 @@ export default {
       channels: [],
       publishRules: {
         title: [{
-          required: true, message: '标题内容不能为空'
+          required: true, message: '标题内容不能为空', trigger: 'blur'
         }, {
-          min: 5, max: 30, message: '标题长度需要在5到30字符之间'
+          min: 5, max: 30, message: '标题长度需要在5到30字符之间', trigger: 'blur'
         }],
         content: [{
-          required: true, message: '文章内容不能为空'
+          required: true, message: '文章内容不能为空', trigger: 'blur'
         }],
         channel_id: [{
-          required: true, message: '频道分类不能为空'
+          required: true, message: '频道分类不能为空', trigger: 'blur'
         }]
+      }
+    }
+  },
+  watch: {
+    $route: function (to) {
+      if (Object.keys(to.params).length) {
+        //  有参数  => 修改
+      } else {
+        // 无参数 => 发布文章
+        this.formData = {
+          title: '',
+          content: '',
+          cover: {
+            type: 0,
+            images: []
+          },
+          channel_id: null
+        }
       }
     }
   },
@@ -71,7 +89,6 @@ export default {
       this.$axios({
         url: '/channels'
       }).then(res => {
-        console.log(res)
         this.channels = res.data.channels
       })
     },

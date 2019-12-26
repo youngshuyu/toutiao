@@ -70,7 +70,7 @@
         </el-col>
         <el-col :span="10">
           <el-row class="right" type="flex" justify="end">
-            <span>
+            <span @click="toModify(item.id)">
               <i class="el-icon-edit"></i>修改
             </span>
             <span @click="delArticle(item.id)">
@@ -150,7 +150,6 @@ export default {
       this.$axios({
         url: '/channels'
       }).then(res => {
-        console.log(res)
         this.select.options = res.data.channels
       })
     },
@@ -160,7 +159,6 @@ export default {
         url: '/articles',
         params
       }).then(res => {
-        console.log(res)
         this.list = res.data.results
         this.page.total = res.data.total_count
         this.loading = false
@@ -201,6 +199,9 @@ export default {
           this.getConditionArticle()
         })
       })
+    },
+    toModify (id) {
+      this.$router.push(`/home/publish/${id.toString()}`)
     }
   },
   created () {

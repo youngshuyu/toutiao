@@ -30,6 +30,10 @@ const routes = [
     }, {
       path: 'publish',
       component: () => import('../views/home/publish')
+    },
+    {
+      path: 'publish/:articleId',
+      component: () => import('../views/home/publish')
     }]
   },
   {
