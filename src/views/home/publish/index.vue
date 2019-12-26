@@ -4,23 +4,23 @@
       <template slot="title">发布文章</template>
     </bread-crumb>
     <!-- 表单 -->
-    <el-form label-width="80px" style="margin-left:30px">
-      <el-form-item label="标题">
-        <el-input v-model="inputTitle" style="width:40%" placeholder="文章名称"></el-input>
+    <el-form label-width="80px" style="margin-left:30px" :model="formData" ref="publishForm" :rules="publishRules">
+      <el-form-item label="标题" prop="title">
+        <el-input v-model="formData.title" style="width:40%" placeholder="文章名称"></el-input>
       </el-form-item>
-      <el-form-item label="内容">
-        <el-input v-model="inputContent" type="textarea" :rows="4"></el-input>
+      <el-form-item label="内容" prop="content">
+        <el-input v-model="formData.content" type="textarea" :rows="4"></el-input>
       </el-form-item>
-      <el-form-item label="封面">
-        <el-radio-group v-model="formData.coverRadio">
+      <el-form-item label="封面" prop="type">
+        <el-radio-group v-model="formData.cover.type">
           <el-radio :label="1">单图</el-radio>
-          <el-radio :label="2">三图</el-radio>
-          <el-radio :label="3">无图</el-radio>
-          <el-radio :label="4">自动</el-radio>
+          <el-radio :label="3">三图</el-radio>
+          <el-radio :label="0">无图</el-radio>
+          <el-radio :label="-1">自动</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="频道">
-        <el-select v-model="value">
+      <el-form-item label="频道" prop="channel_id">
+        <el-select v-model="formData.channel_id">
           <el-option
             v-for="item in channels"
             :key="item.id"
@@ -30,8 +30,8 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">发布</el-button>
-        <el-button>存入草稿</el-button>
+        <el-button @click="publishArticle(false)" type="primary">发布</el-button>
+        <el-button @click="publishArticle(true)">存入草稿</el-button>
       </el-form-item>
     </el-form>
   </el-card>
@@ -42,11 +42,28 @@ export default {
   data () {
     return {
       formData: {
-        inputTitle: '',
-        inputContent: '',
-        coverRadio: 1
+        title: '',
+        content: '',
+        cover: {
+          type: 0,
+          images: []
+        },
+        channel_id: null
       },
-      channels: []
+      channels: [],
+      publishRules: {
+        title: [{
+          required: true, message: '标题内容不能为空'
+        }, {
+          min: 5, max: 30, message: '标题长度需要在5到30字符之间'
+        }],
+        content: [{
+          required: true, message: '文章内容不能为空'
+        }],
+        channel_id: [{
+          required: true, message: '频道分类不能为空'
+        }]
+      }
     }
   },
   methods: {
@@ -56,6 +73,24 @@ export default {
       }).then(res => {
         console.log(res)
         this.channels = res.data.channels
+      })
+    },
+    publishArticle (draft) {
+      this.$refs.publishForm.validate(isOk => {
+        if (isOk) {
+          // 可以去进行 发布接口调用
+          this.$axios({
+            url: '/articles',
+            method: 'post',
+            params: {
+              draft // 是否存为草稿
+            },
+            data: this.formData
+          }).then(() => {
+            // 新增成功 => 应该去内容列表
+            this.$router.push('/home/articles') // 回到内容列表
+          })
+        }
       })
     }
   },
