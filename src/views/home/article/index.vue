@@ -73,7 +73,7 @@
             <span>
               <i class="el-icon-edit"></i>修改
             </span>
-            <span>
+            <span @click="delArticle(item.id)">
               <i class="el-icon-delete"></i> 删除
             </span>
           </el-row>
@@ -187,6 +187,20 @@ export default {
           this.select.dateRange.length > 1 ? this.select.dateRange[1] : null
       }
       this.getArticles(params)
+    },
+    delArticle (id) {
+      this.$confirm('您确定要删除此文章吗?').then(() => {
+        this.$axios({
+          method: 'delete',
+          url: `/articles/${id.toString()}`
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '文章已删除'
+          })
+          this.getConditionArticle()
+        })
+      })
     }
   },
   created () {
@@ -232,6 +246,7 @@ export default {
   .right {
     span {
       font-size: 12px;
+      cursor: pointer;
     }
   }
 }
