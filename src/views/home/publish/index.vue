@@ -20,7 +20,7 @@
         <quill-editor v-model="formData.content" style="height:400px"></quill-editor>
       </el-form-item>
       <el-form-item label="封面" prop="type" style="margin-top:120px">
-        <el-radio-group v-model="formData.cover.type">
+        <el-radio-group v-model="formData.cover.type" @change="changeType">
           <el-radio :label="1">单图</el-radio>
           <el-radio :label="3">三图</el-radio>
           <el-radio :label="0">无图</el-radio>
@@ -28,6 +28,7 @@
         </el-radio-group>
         {{formData.cover}}
       </el-form-item>
+      <cover-image :list="formData.cover.images"></cover-image>
       <el-form-item label="频道" prop="channel_id">
         <el-select v-model="formData.channel_id">
           <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -91,6 +92,7 @@ export default {
     $route: function (to) {
       if (Object.keys(to.params).length) {
         //  有参数  => 修改
+        this.getArticleById(to.params.articleId)
       } else {
         // 无参数 => 发布文章
         this.formData = {
@@ -103,16 +105,16 @@ export default {
           channel_id: null
         }
       }
-    },
-    'formData.cover.type': function () {
-      if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
-        this.formData.cover.images = []
-      } else if (this.formData.cover.type === 1) {
-        this.formData.cover.images = ['']
-      } else if (this.formData.cover.type === 3) {
-        this.formData.cover.images = ['', '', '']
-      }
     }
+    // 'formData.cover.type': function () {
+    //   if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
+    //     this.formData.cover.images = []
+    //   } else if (this.formData.cover.type === 1) {
+    //     this.formData.cover.images = ['']
+    //   } else if (this.formData.cover.type === 3) {
+    //     this.formData.cover.images = ['', '', '']
+    //   }
+    // }
   },
   methods: {
     getChannels () {
@@ -141,6 +143,24 @@ export default {
           })
         }
       })
+    },
+    changeType (value) {
+      switch (value) {
+        case 0:
+          this.formData.cover.images = []
+          break
+        case -1:
+          this.formData.cover.images = []
+          break
+        case 1:
+          this.formData.cover.images = ['']
+          break
+        case 3:
+          this.formData.cover.images = ['', '', '']
+          break
+        default:
+          break
+      }
     },
     getArticleById (id) {
       this.loading = true
