@@ -6,6 +6,7 @@ import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import CoverImage from './publish/cover-image.vue'
+import selectImage from './publish/select-img.vue'
 
 export default {
   install (Vue) {
@@ -14,5 +15,6 @@ export default {
     Vue.component('bread-crumb', breadCrumb)
     Vue.component('quill-editor', quillEditor)
     Vue.component('cover-image', CoverImage)
+    Vue.component('select-image', selectImage)
   }
 }

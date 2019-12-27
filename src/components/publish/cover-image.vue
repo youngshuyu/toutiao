@@ -1,8 +1,12 @@
 <template>
   <div class="cover-image">
-    <div v-for="(item,index) in list" :key="index" class="img-item">
-        <img :src="item ? item : defaultImg" alt="">
+    <div v-for="(item,index) in list" :key="index" class="img-item" @click="openDialog(index)">
+        <img :src="item ? item : defaultImg" alt="" >
     </div>
+    <el-dialog :visible="dialogVisible" @close="closeDialog">
+        <!-- 选择图片组件 -->
+        <select-image @selectOneImg="receiveImg"></select-image>
+    </el-dialog>
   </div>
 </template>
 
@@ -11,8 +15,25 @@ export default {
   props: ['list'],
   data () {
     return {
-      defaultImg: '../../assets/img/pic_bg.png'
+      defaultImg: '../../assets/img/pic_bg.png',
+      dialogVisible: false,
+      number: null
     }
+  },
+  methods: {
+    openDialog (index) {
+      this.dialogVisible = true
+      this.number = index
+    },
+    closeDialog () {
+      this.dialogVisible = false
+    },
+    receiveImg (url) {
+    //   props是只读的，不能更改，只能再次子传父，到父组件上改
+      this.$emit('selectOneImg', url, this.number)
+      this.closeDialog()
+    }
+
   }
 }
 </script>

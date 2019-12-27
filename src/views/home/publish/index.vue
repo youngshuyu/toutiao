@@ -28,7 +28,7 @@
         </el-radio-group>
         {{formData.cover}}
       </el-form-item>
-      <cover-image :list="formData.cover.images"></cover-image>
+      <cover-image :list="formData.cover.images" @selectOneImg="receiveImg"></cover-image>
       <el-form-item label="频道" prop="channel_id">
         <el-select v-model="formData.channel_id">
           <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -106,15 +106,6 @@ export default {
         }
       }
     }
-    // 'formData.cover.type': function () {
-    //   if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
-    //     this.formData.cover.images = []
-    //   } else if (this.formData.cover.type === 1) {
-    //     this.formData.cover.images = ['']
-    //   } else if (this.formData.cover.type === 3) {
-    //     this.formData.cover.images = ['', '', '']
-    //   }
-    // }
   },
   methods: {
     getChannels () {
@@ -170,6 +161,9 @@ export default {
         this.formData = res.data
         this.loading = false
       })
+    },
+    receiveImg (url, index) {
+      this.formData.cover.images = this.formData.cover.images.map((item, i) => i === index ? url : item)
     }
   },
   created () {
