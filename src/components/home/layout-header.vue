@@ -1,7 +1,7 @@
 <template>
   <el-row class="layout-header" type="flex" justify="space-between" align="middle">
     <el-col :span="7" class="left">
-      <i class="el-icon-s-unfold"></i>
+      <i :class="{'el-icon-s-fold' : collapse,'el-icon-s-unfold' : !collapse}" @click="changeCollapse"></i>
       <span class="title">江苏传智播客教育科技股份有限公司</span>
     </el-col>
     <el-col :span="4">
@@ -27,6 +27,7 @@ import eventBus from '../../utils/eventBus'
 export default {
   data () {
     return {
+      collapse: false,
       userInfo: {},
       defaultImg: require('../../assets/img/touxiang.jpg')// 默认头像
     }
@@ -39,6 +40,10 @@ export default {
     })
   },
   methods: {
+    changeCollapse () {
+      this.collapse = !this.collapse
+      eventBus.$emit('collapse')
+    },
     getUserInfo () {
       this.$axios({
         url: '/user/profile'
