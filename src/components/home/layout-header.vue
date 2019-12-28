@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus'
 export default {
   data () {
     return {
@@ -32,13 +33,19 @@ export default {
   },
   created () {
     // 查询数据
-    this.$axios({
-      url: '/user/profile'
-    }).then(result => {
-      this.userInfo = result.data // 获取用户个人信息
+    this.getUserInfo()
+    eventBus.$on('saveUserInfoSuccess', () => {
+      this.getUserInfo()
     })
   },
   methods: {
+    getUserInfo () {
+      this.$axios({
+        url: '/user/profile'
+      }).then(result => {
+        this.userInfo = result.data // 获取用户个人信息
+      })
+    },
     handleCommend (command) {
       if (command === 'git') {
         window.location.href = 'https://github.com/shuiruohanyu/89heimatoutiao'
