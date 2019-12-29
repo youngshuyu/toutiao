@@ -26,7 +26,6 @@
           <el-radio :label="0">无图</el-radio>
           <el-radio :label="-1">自动</el-radio>
         </el-radio-group>
-        {{formData.cover}}
       </el-form-item>
       <cover-image :list="formData.cover.images" @selectOneImg="receiveImg"></cover-image>
       <el-form-item label="频道" prop="channel_id">

@@ -15,7 +15,7 @@ export default {
   props: ['list'],
   data () {
     return {
-      defaultImg: '../../assets/img/pic_bg.png',
+      defaultImg: require('../../assets/img/pic_bg.png'),
       dialogVisible: false,
       number: null
     }
