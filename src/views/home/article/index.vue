@@ -94,7 +94,7 @@
 </template>
 
 <script>
-
+import { getChannels, getArticles } from '../../../actions/articles'
 export default {
   data () {
     return {
@@ -148,17 +148,12 @@ export default {
   },
   methods: {
     async getChannels () {
-      let res = await this.$axios({
-        url: '/channels'
-      })
+      let res = await getChannels()
       this.select.options = res.data.channels
     },
     async getArticles (params) {
       this.loading = true
-      let res = await this.$axios({
-        url: '/articles',
-        params
-      })
+      let res = await getArticles(params)
       this.list = res.data.results
       this.page.total = res.data.total_count
       this.loading = false

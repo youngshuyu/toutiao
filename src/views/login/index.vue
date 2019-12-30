@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import { async } from 'q'
 export default {
   data () {
     // rule当前规则
