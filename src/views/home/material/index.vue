@@ -73,20 +73,19 @@ export default {
     }
   },
   methods: {
-    getData () {
+    async getData () {
       this.loading = true
-      this.$axios({
+      let res = await this.$axios({
         url: '/user/images',
         params: {
           collect: this.activeName === 'collect',
           page: this.page.currentPage,
           per_page: this.page.pageSize
         }
-      }).then(res => {
-        this.list = res.data.results
-        this.page.total = res.data.total_count
-        this.loading = false
       })
+      this.list = res.data.results
+      this.page.total = res.data.total_count
+      this.loading = false
     },
     changeTab () {
       this.getData()
@@ -95,41 +94,35 @@ export default {
       this.page.currentPage = newPage
       this.getData()
     },
-    uploadImg (params) {
+    async uploadImg (params) {
       this.loading = true
       let form = new FormData()
       form.append('image', params.file)// 添加文件到formData
-      this.$axios({
+      await this.$axios({
         url: '/user/images',
         method: 'post',
         data: form
-      }).then(() => {
-        this.loading = false
-        this.getData()
       })
+      this.loading = false
+      this.getData()
     },
-    collectOrCancel (row) {
-      this.$axios({
+    async collectOrCancel (row) {
+      await this.$axios({
         method: 'put',
         url: `/user/images/${row.id}`,
         data: {
           collect: !row.is_collected
         }
       })
-        .then(() => {
-          this.getData()
-        })
+      this.getData()
     },
-    delMaterial (id) {
-      this.$confirm('确定要删除么').then(() => {
-        this.$axios({
-          url: `/user/images/${id}`,
-          method: 'delete'
-        })
-          .then(() => {
-            this.getData()
-          })
+    async delMaterial (id) {
+      await this.$confirm('确定要删除么')
+      await this.$axios({
+        url: `/user/images/${id}`,
+        method: 'delete'
       })
+      this.getData()
     }
   },
   created () {

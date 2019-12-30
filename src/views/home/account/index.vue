@@ -50,38 +50,37 @@ export default {
     }
   },
   methods: {
-    getUserInfo () {
-      this.$axios({
+    async getUserInfo () {
+      let res = await this.$axios({
         url: '/user/profile'
-      }).then(res => (this.formData = res.data))
+      })
+      this.formData = res.data
     },
-    uploadImg (params) {
+    async uploadImg (params) {
       let data = new FormData()
       data.append('photo', params.file)
-      this.$axios({
+      let res = await this.$axios({
         method: 'patch',
         url: '/user/photo',
         data
-      }).then(res => {
-        this.formData.photo = res.data.photo
       })
+      this.formData.photo = res.data.photo
     },
     saveUserInfo () {
-      this.$refs.myForm.validate((isOK) => {
+      this.$refs.myForm.validate(async isOK => {
         //   调用保存方法
         if (isOK) {
-          this.$axios({
+          await this.$axios({
             url: '/user/profile',
             method: 'patch',
             data: this.formData
-          }).then(result => {
-            //   认为保存成功
-            this.$message({
-              type: 'success',
-              message: '保存信息成功'
-            })
-            eventBus.$emit('saveUserInfoSuccess')
           })
+          //   认为保存成功
+          this.$message({
+            type: 'success',
+            message: '保存信息成功'
+          })
+          eventBus.$emit('saveUserInfoSuccess')
         }
       })
     }

@@ -94,6 +94,7 @@
 </template>
 
 <script>
+
 export default {
   data () {
     return {
@@ -146,23 +147,21 @@ export default {
     }
   },
   methods: {
-    getChannels () {
-      this.$axios({
+    async getChannels () {
+      let res = await this.$axios({
         url: '/channels'
-      }).then(res => {
-        this.select.options = res.data.channels
       })
+      this.select.options = res.data.channels
     },
-    getArticles (params) {
+    async getArticles (params) {
       this.loading = true
-      this.$axios({
+      let res = await this.$axios({
         url: '/articles',
         params
-      }).then(res => {
-        this.list = res.data.results
-        this.page.total = res.data.total_count
-        this.loading = false
       })
+      this.list = res.data.results
+      this.page.total = res.data.total_count
+      this.loading = false
     },
     selectStatus () {
       this.page.currentPage = 1
@@ -186,19 +185,17 @@ export default {
       }
       this.getArticles(params)
     },
-    delArticle (id) {
-      this.$confirm('您确定要删除此文章吗?').then(() => {
-        this.$axios({
-          method: 'delete',
-          url: `/articles/${id.toString()}`
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '文章已删除'
-          })
-          this.getConditionArticle()
-        })
+    async delArticle (id) {
+      await this.$confirm('您确定要删除此文章吗?')
+      await this.$axios({
+        method: 'delete',
+        url: `/articles/${id.toString()}`
       })
+      this.$message({
+        type: 'success',
+        message: '文章已删除'
+      })
+      this.getConditionArticle()
     },
     toModify (id) {
       this.$router.push(`/home/publish/${id.toString()}`)

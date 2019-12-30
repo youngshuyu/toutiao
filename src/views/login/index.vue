@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import { async } from 'q'
 export default {
   data () {
     // rule当前规则
@@ -60,15 +61,13 @@ export default {
   methods: {
     login () {
       // validate 是一个方法 => 方法中传入的一个函数 两个校验参数  是否校验成功/未校验成功的字段
-      this.$refs.myForm.validate(isOK => {
+      this.$refs.myForm.validate(async isOK => {
         if (isOK) {
-          this.$axios.post('/authorizations', this.myForm)
-            .then(res => {
-              window.localStorage.setItem('user-token', res.data.token)// 对token令牌进行前端存储,以便后续接口访问使用
-              this.$router.push('/home')
-            })
-            // .catch(error => console.log(error)
-            // )
+          let res = await this.$axios.post('/authorizations', this.myForm)
+          window.localStorage.setItem('user-token', res.data.token)// 对token令牌进行前端存储,以便后续接口访问使用
+          this.$router.push('/home')
+          // .catch(error => console.log(error)
+          // )
         }
       })
     }

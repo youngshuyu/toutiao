@@ -44,12 +44,11 @@ export default {
       this.collapse = !this.collapse
       eventBus.$emit('collapse')
     },
-    getUserInfo () {
-      this.$axios({
+    async getUserInfo () {
+      let result = await this.$axios({
         url: '/user/profile'
-      }).then(result => {
-        this.userInfo = result.data // 获取用户个人信息
       })
+      this.userInfo = result.data // 获取用户个人信息
     },
     handleCommend (command) {
       if (command === 'git') {

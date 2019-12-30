@@ -107,30 +107,28 @@ export default {
     }
   },
   methods: {
-    getChannels () {
-      this.$axios({
+    async  getChannels () {
+      let res = await this.$axios({
         url: '/channels'
-      }).then(res => {
-        this.channels = res.data.channels
       })
+      this.channels = res.data.channels
     },
     publishArticle (draft) {
-      this.$refs.publishForm.validate(isOk => {
+      this.$refs.publishForm.validate(async (isOk) => {
         if (isOk) {
           // 可以去进行 发布接口调用
           let { articleId } = this.$route.params
           // 如果url 路径有参数就是修改文章，否则是发布文章
-          this.$axios({
+          await this.$axios({
             url: articleId ? `/articles/${articleId}` : '/articles',
             method: articleId ? 'put' : 'post',
             params: {
               draft // 是否存为草稿
             },
             data: this.formData
-          }).then(() => {
-            // 新增成功 => 应该去内容列表
-            this.$router.push('/home/articles') // 回到内容列表
           })
+          // 新增成功 => 应该去内容列表
+          this.$router.push('/home/articles') // 回到内容列表
         }
       })
     },
@@ -152,14 +150,13 @@ export default {
           break
       }
     },
-    getArticleById (id) {
+    async getArticleById (id) {
       this.loading = true
-      this.$axios({
+      let res = await this.$axios({
         url: `/articles/${id}`
-      }).then(res => {
-        this.formData = res.data
-        this.loading = false
       })
+      this.formData = res.data
+      this.loading = false
     },
     receiveImg (url, index) {
       this.formData.cover.images = this.formData.cover.images.map((item, i) => i === index ? url : item)

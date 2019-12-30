@@ -42,20 +42,19 @@ export default {
     }
   },
   methods: {
-    getMaterial () {
+    async getMaterial () {
       this.loading = true
-      this.$axios({
+      let res = await this.$axios({
         url: '/user/images',
         params: {
           collect: false,
           page: this.page.currentPage,
           per_page: this.page.pageSize
         }
-      }).then(res => {
-        this.list = res.data.results
-        this.page.total = res.data.total_count
-        this.loading = false
       })
+      this.list = res.data.results
+      this.page.total = res.data.total_count
+      this.loading = false
     },
     changePage (newPage) {
       this.page.currentPage = newPage
@@ -64,16 +63,15 @@ export default {
     selectImg (url) {
       this.$emit('selectOneImg', url)
     },
-    uploadImg (params) {
+    async uploadImg (params) {
       let data = new FormData()
       data.append('image', params.file)
-      this.$axios({
+      let res = await this.$axios({
         url: '/user/images',
         method: 'post',
         data
-      }).then(res => {
-        this.$emit('selectOneImg', res.data.url)
       })
+      this.$emit('selectOneImg', res.data.url)
     }
   },
   created () {
